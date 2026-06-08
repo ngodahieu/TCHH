@@ -283,18 +283,21 @@ reagentSelect.addEventListener(
 document
 .getElementById("reactionNameSelect")
 .addEventListener("change", loadFirestoreData);
-document.getElementById("searchInput")
-.addEventListener("input", function(){
+const searchInput = document.getElementById("searchInput");
 
-    const keyword = this.value.toLowerCase();
+if(searchInput){
+    searchInput.addEventListener("input", function(){
 
-    const filtered = allData.filter(item =>
-        (item.reactionName || "").toLowerCase().includes(keyword) ||
-(item.compound || "").toLowerCase().includes(keyword)
-    );
+        const keyword = this.value.toLowerCase();
 
-    renderTable(filtered);
-});
+        const filtered = allData.filter(item =>
+            (item.reactionName || "").toLowerCase().includes(keyword) ||
+            (item.compound || "").toLowerCase().includes(keyword)
+        );
+
+        renderTable(filtered);
+    });
+}
 loadReagents();
 document.getElementById("reagent").addEventListener("change", (e) => {
 
