@@ -162,62 +162,6 @@ Na
 
 </div>
 
-<script>
-const reagentSelect =
-document.getElementById("reagent");
-
-const tableBody =
-document.getElementById("tableBody");
-
-function renderTable(){
-
-const reagent =
-reagentSelect.value;
-
-const reactions =
-data[reagent];
-
-tableBody.innerHTML = "";
-
-for(const compound in reactions){
-
-const item =
-reactions[compound];
-
-const row =
-document.createElement("tr");
-
-const isNoReaction =
-item.result === "Không phản ứng";
-
-row.innerHTML = `
-<td>${compound}</td>
-
-<td class="${
-isNoReaction ? "no" : "ok"
-}">
-${item.result}
-</td>
-
-<td>${item.reaction}</td>
-
-<td>${item.equation}</td>
-`;
-
-tableBody.appendChild(row);
-
-}
-
-}
-
-reagentSelect.addEventListener(
-"change",
-loadFirestoreData
-);
-
-loadFirestoreData();
-
-</script>
 <script type="module">
 
 import { initializeApp }
@@ -245,6 +189,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+const reagentSelect =
+document.getElementById("reagent");
+
+const tableBody =
+document.getElementById("tableBody");
 async function loadFirestoreData(){
 
     const reagent =
@@ -290,6 +239,12 @@ async function loadFirestoreData(){
     });
 
 }
+reagentSelect.addEventListener(
+    "change",
+    loadFirestoreData
+);
+
+loadFirestoreData();
 </script>
 </body>
 </html>
