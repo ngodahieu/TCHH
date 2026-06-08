@@ -105,11 +105,6 @@ Thêm thuốc thử
 <input id="condition" placeholder="Điều kiện phản ứng">
 <input id="reactionName" placeholder="Tên phản ứng">
 
-<textarea
-id="equation"
-placeholder="PTHH">
-</textarea>
-
 <button onclick="addReaction()">
 Thêm phản ứng
 </button>
@@ -129,7 +124,6 @@ Cập nhật
 <th>Hiện tượng</th>
 <th>Điều kiện</th>
 <th>Tên phản ứng</th>
-<th>PTHH</th>
 <th>Sửa</th>
 <th>Xóa</th>
 </tr>
@@ -361,9 +355,6 @@ try{
 
         reactionName:
         document.getElementById("reactionName").value,
-
-        equation:
-        document.getElementById("equation").value,
             
         condition: 
         document.getElementById("condition").value
@@ -404,7 +395,6 @@ document.getElementById("compound").value = "";
 document.getElementById("reagent").value = "";
 document.getElementById("phenomenon").value = "";
 document.getElementById("reactionName").value = "";
-document.getElementById("equation").value = "";
 document.getElementById("condition").value = "";
     loadData();
 
@@ -443,8 +433,6 @@ list.innerHTML += `
 <td>${item.phenomenon || ""}</td>
 
 <td>${item.reactionName || ""}</td>
-
-<td>${item.equation || ""}</td>
 
 <td>${item.condition || ""}</td>
 <td>
@@ -501,9 +489,6 @@ item.phenomenon || "";
 document.getElementById("reactionName").value =
 item.reactionName || "";
 
-document.getElementById("equation").value =
-item.equation || "";
-
 document.getElementById("condition").value =
 item.condition || "";
     
@@ -530,9 +515,6 @@ document.getElementById("phenomenon").value,
 
 reactionName:
 document.getElementById("reactionName").value,
-
-equation:
-document.getElementById("equation").value,
 
 condition: 
 document.getElementById("condition").value
