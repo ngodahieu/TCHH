@@ -112,15 +112,12 @@ BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
 </h1>
 
 <div class="control">
-
 <select id="reagent">
+    <option value="">-- Tất cả thuốc thử --</option>
 </select>
-<div class="control">
-<select id="reagent"></select>
 
 <!-- THÊM CÁI NÀY -->
-<select id="reactionNameSelect"></select>
-</div>
+<select id="reactionNameSelect"><option value="">-- Tất cả phản ứng --</option></select>
 </div>
 
 <div class="table-container">
@@ -175,21 +172,28 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+let selectedReagent = "";
+let selectedReaction = "";
+let allData = [];
 async function loadFirestoreData(){
 
-    const reagent =
-    document.getElementById("reagent").value;
+    if(unsubscribe) unsubscribe();
 
-   const reactionName =
-document.getElementById("reactionNameSelect").value;
+    let q = collection(db,"reactions");
 
-const q = query(
-    collection(db,"reactions"),
-    where("reagent","==",reagent),
-    where("reactionName","==",reactionName)
-);
+    let constraints = [];
 
-    onSnapshot(q, (snapshot) => {
+    if(selectedReagent){
+        constraints.push(where("reagent","==",selectedReagent));
+    }
+
+    if(selectedReaction){
+        constraints.push(where("reactionName","==",selectedReaction));
+    }
+
+    const finalQuery = constraints.length ? query(q, ...constraints) : q;
+
+    unsubscribe = onSnapshot(finalQuery, (snapshot) => {
 
         allData = [];
 
@@ -198,13 +202,13 @@ const q = query(
         });
 
         renderTable(allData);
-
     });
 }
 async function loadReagents(){
 
     const reagentSelect =
     document.getElementById("reagent");
+    const tableBody = document.getElementById("tableBody");
 
     const snapshot =
     await getDocs(collection(db,"reagents"));
@@ -226,24 +230,24 @@ async function loadReagents(){
 }
 async function loadReactionNames(){
 
-    const select =
-    document.getElementById("reactionNameSelect");
+    const select = document.getElementById("reactionNameSelect");
 
-    select.innerHTML = "";
+    select.innerHTML = `<option value="">-- Tất cả phản ứng --</option>`;
 
-    const snapshot =
-    await getDocs(collection(db,"reactionNames"));
+    const snapshot = await getDocs(collection(db,"reactions"));
 
-    snapshot.forEach(docSnap => {
+    const set = new Set();
 
-        const option = document.createElement("option");
-
-        option.value = docSnap.data().name;
-        option.textContent = docSnap.data().name;
-
-        select.appendChild(option);
+    snapshot.forEach(doc=>{
+        set.add(doc.data().reactionName);
     });
 
+    set.forEach(name=>{
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+    });
 }
 function renderTable(data){
 
@@ -292,6 +296,26 @@ document.getElementById("searchInput")
     renderTable(filtered);
 });
 loadReagents();
+document.getElementById("reagent").addEventListener("change", (e) => {
+
+    selectedReagent = e.target.value;
+
+    // reset phản ứng
+    selectedReaction = "";
+    document.getElementById("reactionNameSelect").value = "";
+
+    loadFirestoreData();
+});
+document.getElementById("reactionNameSelect").addEventListener("change", (e) => {
+
+    selectedReaction = e.target.value;
+
+    // reset thuốc thử
+    selectedReagent = "";
+    document.getElementById("reagent").value = "";
+
+    loadFirestoreData();
+});
 loadReactionNames();
 </script>
 </body>
