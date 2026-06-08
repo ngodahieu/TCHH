@@ -115,10 +115,14 @@ BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
 
 <select id="reagent">
 </select>
+<div class="control">
+<select id="reagent"></select>
 
+<!-- THÊM CÁI NÀY -->
+<select id="reactionNameSelect"></select>
 </div>
-<input id="searchInput" placeholder="Tìm tên phản ứng..." 
-style="width:100%;padding:12px;margin-bottom:15px;">
+</div>
+
 <div class="table-container">
 
 <table>
@@ -216,6 +220,27 @@ async function loadReagents(){
 
     loadFirestoreData();
 }
+async function loadReactionNames(){
+
+    const select =
+    document.getElementById("reactionNameSelect");
+
+    select.innerHTML = "";
+
+    const snapshot =
+    await getDocs(collection(db,"reactionNames"));
+
+    snapshot.forEach(docSnap => {
+
+        const option = document.createElement("option");
+
+        option.value = docSnap.data().name;
+        option.textContent = docSnap.data().name;
+
+        select.appendChild(option);
+    });
+
+}
 function renderTable(data){
 
     tableBody.innerHTML = "";
@@ -260,6 +285,7 @@ document.getElementById("searchInput")
     renderTable(filtered);
 });
 loadReagents();
+loadReactionNames();
 </script>
 </body>
 </html>
