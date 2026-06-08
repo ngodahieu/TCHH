@@ -196,16 +196,8 @@ radial-gradient(circle,
 
 .orbit{
     position:absolute;
-    width:340px;
-    height:340px;
-
-    left:80px;
-    top:80px;
-
     border-radius:50%;
-
     animation:orbit 6s linear infinite;
-
     transform-style:preserve-3d;
 }
 
@@ -334,7 +326,7 @@ const radius = isMobile ? 100 : 170;
 
 const points = [];
 
-for(let i=0;i<3;i++){
+for(let i=0;i<6;i++){
 
     const angle = i*Math.PI/3;
 
@@ -391,7 +383,11 @@ for(let i=0;i<6;i++){
 
     orbit.style.animationDelay =
         -(i*1)+"s";
+    orbit.style.width = (radius * 2) + "px";
+orbit.style.height = (radius * 2) + "px";
 
+orbit.style.left = (center - radius) + "px";
+orbit.style.top = (center - radius) + "px";
     const electron =
         document.createElement("div");
 
@@ -413,6 +409,12 @@ const cloud =
 document.createElement("div");
 
 cloud.className = "pi-cloud";
+
+cloud.style.width = (radius * 1.9) + "px";
+cloud.style.height = (radius * 1.9) + "px";
+
+cloud.style.left = (center - radius*0.95) + "px";
+cloud.style.top = (center - radius*0.95) + "px";
 
 benzene.appendChild(cloud);
 /* ========================= */
