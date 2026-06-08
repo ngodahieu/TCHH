@@ -117,7 +117,8 @@ BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
 </select>
 
 </div>
-
+<input id="searchInput" placeholder="Tìm tên phản ứng..." 
+style="width:100%;padding:12px;margin-bottom:15px;">
 <div class="table-container">
 
 <table>
@@ -140,7 +141,9 @@ BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
 </table>
 
 </div>
-
+<script>
+    let allData = [];
+</script>
 <script type="module">
 
 import { initializeApp }
@@ -168,41 +171,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
-async function loadReagents(){
-
-    const reagentSelect =
-    document.getElementById("reagent");
-
-    reagentSelect.innerHTML = "";
-
-    const snapshot =
-    await getDocs(
-        collection(db,"reagents")
-    );
-
-    snapshot.forEach(docSnap=>{
-
-        const option =
-        document.createElement("option");
-
-        option.value =
-        docSnap.data().name;
-
-        option.textContent =
-        docSnap.data().name;
-
-        reagentSelect.appendChild(option);
-
-    });
-
-    loadFirestoreData();
-
-}
-const reagentSelect =
-document.getElementById("reagent");
-
-const tableBody =
-document.getElementById("tableBody");
 async function loadFirestoreData(){
 
     const reagent =
@@ -215,44 +183,82 @@ async function loadFirestoreData(){
 
     onSnapshot(q, (snapshot) => {
 
+        allData = [];
+
+        snapshot.forEach(doc=>{
+            allData.push(doc.data());
+        });
+
+        renderTable(allData);
+
+    });
+}
+async function loadReagents(){
+
+    const reagentSelect =
+    document.getElementById("reagent");
+
+    const snapshot =
+    await getDocs(collection(db,"reagents"));
+
+    reagentSelect.innerHTML = "";
+
+    snapshot.forEach(docSnap => {
+
+        const option = document.createElement("option");
+
+        option.value = docSnap.data().name;
+        option.textContent = docSnap.data().name;
+
+        reagentSelect.appendChild(option);
+
+    });
+
+    loadFirestoreData();
+}
+function renderTable(data){
+
     tableBody.innerHTML = "";
 
-    snapshot.forEach(doc=>{
+    data.forEach(item => {
 
-        const item = doc.data();
-
-        const row =
-        document.createElement("tr");
+        const row = document.createElement("tr");
 
         const isNoReaction =
-        item.phenomenon ===
-        "Không phản ứng";
+        item.phenomenon === "Không phản ứng";
 
         row.innerHTML = `
         <td>${item.compound}</td>
-
-        <td class="${
-            isNoReaction ? "no":"ok"
-        }">
-            ${item.phenomenon}
-        </td>
-
+        <td class="${isNoReaction ? "no":"ok"}">${item.phenomenon}</td>
         <td>${item.reactionName}</td>
-
         <td>${item.condition || ""}</td>
         `;
 
         tableBody.appendChild(row);
-
     });
-
-});
 }
+const reagentSelect =
+document.getElementById("reagent");
+
+const tableBody =
+document.getElementById("tableBody");
+
 reagentSelect.addEventListener(
     "change",
     loadFirestoreData
 );
+document.getElementById("searchInput")
+.addEventListener("input", function(){
 
+    const keyword = this.value.toLowerCase();
+
+    const filtered = allData.filter(item =>
+        (item.reactionName || "").toLowerCase().includes(keyword) ||
+(item.compound || "").toLowerCase().includes(keyword)
+    );
+
+    renderTable(filtered);
+});
 loadReagents();
 </script>
 </body>
