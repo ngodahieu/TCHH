@@ -114,7 +114,9 @@ BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
 <div class="control">
 
 <select id="reagent">
-
+<option value="Halogen (Br2, Cl2, I2, F2)">
+Halogen (Br₂, Cl₂, I₂, F₂)
+</option>
 <option value="Br2">Br₂</option>
 
 <option value="AgNO3">
@@ -161,157 +163,6 @@ Na
 </div>
 
 <script>
-
-const data = {
-
-Br2:{
-
-"Anken":{
-result:"Mất màu dung dịch brom",
-reaction:"Phản ứng cộng brom",
-equation:"CH2=CH2 + Br2 → CH2Br-CH2Br"
-},
-
-"Ankin":{
-result:"Mất màu dung dịch brom",
-reaction:"Phản ứng cộng brom",
-equation:"HC≡CH + Br2 → CHBr=CHBr"
-},
-
-"Phenol":{
-result:"Kết tủa trắng",
-reaction:"Phản ứng thế brom",
-equation:"C6H5OH + 3Br2 → C6H2Br3OH↓ + 3HBr"
-},
-
-"Anđehit":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-},
-
-"Ancol":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-}
-
-},
-
-AgNO3:{
-
-"Anken":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-},
-
-"Ankin":{
-result:"Kết tủa bạc axetylua",
-reaction:"Phản ứng thế H linh động",
-equation:"HC≡CH + 2AgNO3 + 2NH3 → AgC≡CAg↓"
-},
-
-"Phenol":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-},
-
-"Anđehit":{
-result:"Xuất hiện gương bạc",
-reaction:"Phản ứng tráng bạc",
-equation:"RCHO + 2[Ag(NH3)2]OH → RCOONH4 + 2Ag↓"
-},
-
-"Ancol":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-}
-
-},
-
-CuOH2:{
-
-"Anken":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-},
-
-"Ankin":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-},
-
-"Phenol":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-},
-
-"Anđehit":{
-result:"Kết tủa đỏ gạch",
-reaction:"Phản ứng oxi hóa",
-equation:"RCHO + Cu(OH)2 → Cu2O↓"
-},
-
-"Ancol":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-}
-
-},
-
-NaHCO3:{
-
-"Anken":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-},
-
-"Axit cacboxylic":{
-result:"Sủi bọt khí CO₂",
-reaction:"Phản ứng axit-bazơ",
-equation:"RCOOH + NaHCO3 → RCOONa + CO2↑ + H2O"
-},
-
-"Phenol":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-}
-
-},
-
-Na:{
-
-"Ancol":{
-result:"Thoát khí H₂",
-reaction:"Phản ứng thế H của nhóm OH",
-equation:"2ROH + 2Na → 2RONa + H2↑"
-},
-
-"Phenol":{
-result:"Thoát khí H₂",
-reaction:"Phản ứng thế H của nhóm OH",
-equation:"2C6H5OH + 2Na → 2C6H5ONa + H2↑"
-},
-
-"Anken":{
-result:"Không phản ứng",
-reaction:"-",
-equation:"-"
-}
-
-}
-
-};
-
 const reagentSelect =
 document.getElementById("reagent");
 
@@ -361,13 +212,84 @@ tableBody.appendChild(row);
 
 reagentSelect.addEventListener(
 "change",
-renderTable
+loadFirestoreData
 );
 
-renderTable();
+loadFirestoreData();
 
 </script>
+<script type="module">
 
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+ getFirestore,
+ collection,
+ getDocs,
+ query,
+ where
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBK7Z0a47xMnJe7uqcJkAm0EX27frDPTVM",
+  authDomain: "ht-organic-reactions.firebaseapp.com",
+  projectId: "ht-organic-reactions",
+  storageBucket: "ht-organic-reactions.firebasestorage.app",
+  messagingSenderId: "257709442129",
+  appId: "1:257709442129:web:5b05eacb71be44e66aa470",
+  measurementId: "G-KE1F0TEVF6"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+async function loadFirestoreData(){
+
+    const reagent =
+    document.getElementById("reagent").value;
+
+    const q = query(
+        collection(db,"reactions"),
+        where("reagent","==",reagent)
+    );
+
+    const snapshot =
+    await getDocs(q);
+
+    tableBody.innerHTML = "";
+
+    snapshot.forEach(doc=>{
+
+        const item = doc.data();
+
+        const row =
+        document.createElement("tr");
+
+        const isNoReaction =
+        item.phenomenon ===
+        "Không phản ứng";
+
+        row.innerHTML = `
+        <td>${item.compound}</td>
+
+        <td class="${
+            isNoReaction ? "no":"ok"
+        }">
+            ${item.phenomenon}
+        </td>
+
+        <td>${item.reactionName}</td>
+
+        <td>${item.equation}</td>
+        `;
+
+        tableBody.appendChild(row);
+
+    });
+
+}
+</script>
 </body>
 </html>
-```
