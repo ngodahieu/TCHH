@@ -66,7 +66,16 @@ placeholder="Tên HCHC">
 <button onclick="addCompound()">
 Thêm HCHC
 </button>
+<table>
+<thead>
+<tr>
+<th>Danh sách HCHC</th>
+</tr>
+</thead>
 
+<tbody id="compoundList">
+</tbody>
+</table>
 <h3>Quản lý thuốc thử</h3>
 
 <input
@@ -76,7 +85,16 @@ placeholder="Tên thuốc thử">
 <button onclick="addReagent()">
 Thêm thuốc thử
 </button>
+<table>
+<thead>
+<tr>
+<th>Danh sách thuốc thử</th>
+</tr>
+</thead>
 
+<tbody id="reagentList">
+</tbody>
+</table>
 <hr>
 
 <select id="compound"></select>
@@ -177,6 +195,7 @@ async function(){
     ).value = "";
 
     loadCompounds();
+loadCompoundTable();
 
 }
 window.addReagent =
@@ -201,6 +220,7 @@ async function(){
     ).value = "";
 
     loadReagents();
+loadReagentTable();
 
 }
 async function loadCompounds(){
@@ -237,6 +257,31 @@ async function loadCompounds(){
     });
 
 }
+async function loadCompoundTable(){
+
+    const snapshot =
+    await getDocs(
+    collection(db,"compounds")
+    );
+
+    const list =
+    document.getElementById(
+    "compoundList"
+    );
+
+    list.innerHTML = "";
+
+    snapshot.forEach(docSnap=>{
+
+        list.innerHTML += `
+        <tr>
+        <td>${docSnap.data().name}</td>
+        </tr>
+        `;
+
+    });
+
+}
 async function loadReagents(){
 
     const select =
@@ -267,6 +312,31 @@ async function loadReagents(){
         select.appendChild(
         option
         );
+
+    });
+
+}
+async function loadReagentTable(){
+
+    const snapshot =
+    await getDocs(
+    collection(db,"reagents")
+    );
+
+    const list =
+    document.getElementById(
+    "reagentList"
+    );
+
+    list.innerHTML = "";
+
+    snapshot.forEach(docSnap=>{
+
+        list.innerHTML += `
+        <tr>
+        <td>${docSnap.data().name}</td>
+        </tr>
+        `;
 
     });
 
@@ -469,6 +539,10 @@ loadData();
 }
 loadCompounds();
 loadReagents();
+
+loadCompoundTable();
+loadReagentTable();
+
 loadData();
 </script>
 </body>
