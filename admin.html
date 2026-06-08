@@ -157,7 +157,36 @@ try{
         document.getElementById("equation").value
     }
     );
+const reagentName =
+document.getElementById("reagent").value;
 
+const reagentSnapshot =
+await getDocs(
+collection(db,"reagents")
+);
+
+let exists = false;
+
+reagentSnapshot.forEach(doc=>{
+
+    if(doc.data().name === reagentName){
+
+        exists = true;
+
+    }
+
+});
+
+if(!exists){
+
+    await addDoc(
+    collection(db,"reagents"),
+    {
+        name: reagentName
+    }
+    );
+
+}
     alert("Đã thêm thành công");
 document.getElementById("compound").value = "";
 document.getElementById("reagent").value = "";
