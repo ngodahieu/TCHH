@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Panel</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#0b1730;
+    color:white;
+    padding:30px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+input,textarea{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:none;
+    border-radius:8px;
+}
+
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:8px;
+    background:#00bcd4;
+    color:white;
+    cursor:pointer;
+}
+
+table{
+    width:100%;
+    margin-top:30px;
+    border-collapse:collapse;
+}
+
+td,th{
+    border:1px solid #333;
+    padding:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Quản lý phản ứng hữu cơ</h1>
+
+<input id="compound" placeholder="HCHC">
+
+<input id="reagent" placeholder="Thuốc thử">
+
+<input id="phenomenon" placeholder="Hiện tượng">
+
+<input id="reactionName" placeholder="Tên phản ứng">
+
+<textarea
+id="equation"
+placeholder="PTHH">
+</textarea>
+
+<button onclick="addReaction()">
+Thêm phản ứng
+</button>
+<button
+id="updateBtn"
+onclick="updateReaction()"
+style="display:none;background:#4caf50;">
+Cập nhật
+</button>
+<table>
+
+<thead>
+
+<tr>
+<th>HCHC</th>
+<th>Thuốc thử</th>
+<th>Hiện tượng</th>
+<th>Tên phản ứng</th>
+<th>PTHH</th>
+<th>Sửa</th>
+<th>Xóa</th>
+</tr>
+
+</thead>
+
+<tbody id="list">
+
+</tbody>
+
+</table>
+
+</div>
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+deleteDoc,
+doc,
+getDoc,
+updateDoc
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBK7Z0a47xMnJe7uqcJkAm0EX27frDPTVM",
+  authDomain: "ht-organic-reactions.firebaseapp.com",
+  projectId: "ht-organic-reactions",
+  storageBucket: "ht-organic-reactions.firebasestorage.app",
+  messagingSenderId: "257709442129",
+  appId: "1:257709442129:web:5b05eacb71be44e66aa470",
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+let editingId = null;
+window.addReaction = async function(){
+
+try{
+
+    await addDoc(
+    collection(db,"reactions"),
+    {
+        compound:
+        document.getElementById("compound").value,
+
+        reagent:
+        document.getElementById("reagent").value,
+
+        phenomenon:
+        document.getElementById("phenomenon").value,
+
+        reactionName:
+        document.getElementById("reactionName").value,
+
+        equation:
+        document.getElementById("equation").value
+    }
+    );
+
+    alert("Đã thêm thành công");
+document.getElementById("compound").value = "";
+document.getElementById("reagent").value = "";
+document.getElementById("phenomenon").value = "";
+document.getElementById("reactionName").value = "";
+document.getElementById("equation").value = "";
+    loadData();
+
+}catch(error){
+
+    console.error(error);
+
+    alert("Lỗi: " + error.message);
+
+}
+
+}
+async function loadData(){
+
+const snapshot =
+await getDocs(
+collection(db,"reactions")
+);
+
+const list =
+document.getElementById("list");
+
+list.innerHTML="";
+
+snapshot.forEach(docSnap=>{
+
+const item = docSnap.data();
+
+list.innerHTML += `
+<tr>
+
+<td>${item.compound || ""}</td>
+
+<td>${item.reagent || ""}</td>
+
+<td>${item.phenomenon || ""}</td>
+
+<td>${item.reactionName || ""}</td>
+
+<td>${item.equation || ""}</td>
+
+<td>
+<button onclick="editReaction('${docSnap.id}')">
+Sửa
+</button>
+</td>
+
+<td>
+<button onclick="deleteReaction('${docSnap.id}')">
+Xóa
+</button>
+</td>
+
+</tr>
+`;
+
+});
+
+}
+window.deleteReaction =
+async function(id){
+
+if(!confirm("Xóa?"))
+return;
+
+await deleteDoc(
+doc(db,"reactions",id)
+);
+
+loadData();
+
+}
+window.editReaction = async function(id){
+
+const snap =
+await getDoc(
+doc(db,"reactions",id)
+);
+
+const item = snap.data();
+
+editingId = id;
+
+document.getElementById("compound").value =
+item.compound || "";
+
+document.getElementById("reagent").value =
+item.reagent || "";
+
+document.getElementById("phenomenon").value =
+item.phenomenon || "";
+
+document.getElementById("reactionName").value =
+item.reactionName || "";
+
+document.getElementById("equation").value =
+item.equation || "";
+
+document.getElementById("updateBtn").style.display =
+"inline-block";
+
+}
+window.updateReaction =
+async function(){
+
+if(!editingId) return;
+
+await updateDoc(
+doc(db,"reactions",editingId),
+{
+compound:
+document.getElementById("compound").value,
+
+reagent:
+document.getElementById("reagent").value,
+
+phenomenon:
+document.getElementById("phenomenon").value,
+
+reactionName:
+document.getElementById("reactionName").value,
+
+equation:
+document.getElementById("equation").value
+}
+);
+
+alert("Đã cập nhật");
+
+editingId = null;
+
+document.getElementById("updateBtn").style.display =
+"none";
+
+loadData();
+
+}
+loadData();
+</script>
+</body>
+</html>
