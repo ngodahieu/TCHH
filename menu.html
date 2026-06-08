@@ -1,11 +1,10 @@
-```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Danh Mục Phản Ứng Hữu Cơ</title>
+<title>Bảng Tổng Hợp Phản Ứng Nhận Biết Hữu Cơ</title>
 
 <style>
 
@@ -13,140 +12,361 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
+    font-family:Arial,sans-serif;
 }
 
 body{
     min-height:100vh;
-    font-family:Arial,sans-serif;
-
     background:
     radial-gradient(circle at center,
     #0b1730 0%,
     #050d1a 50%,
     #000000 100%);
-
     color:white;
+    padding:20px;
 }
 
-.header{
+h1{
     text-align:center;
-    padding:40px 20px;
-}
-
-.header h1{
-    font-size:40px;
+    margin-bottom:25px;
 
     text-shadow:
     0 0 10px #00d9ff,
     0 0 20px #00d9ff;
 }
 
-.container{
-
-    width:90%;
+.control{
     max-width:1200px;
-
     margin:auto;
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(260px,1fr));
-
-    gap:25px;
+    margin-bottom:20px;
 }
 
-.card{
+select{
+    width:100%;
+    padding:12px;
 
-    padding:35px;
+    border:none;
+    border-radius:10px;
 
-    border-radius:20px;
+    background:#112244;
+    color:white;
+    font-size:16px;
+}
 
-    background:
-    rgba(255,255,255,0.05);
+.table-container{
+    overflow-x:auto;
+    max-width:1200px;
+    margin:auto;
+}
 
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:rgba(255,255,255,.05);
     backdrop-filter:blur(10px);
-
-    border:1px solid rgba(0,217,255,.3);
-
-    cursor:pointer;
-
-    transition:.35s;
-
-    text-align:center;
 }
 
-.card:hover{
-
-    transform:
-    translateY(-8px)
-    scale(1.03);
-
-    box-shadow:
-    0 0 20px #00d9ff,
-    0 0 40px rgba(0,217,255,.4);
+th{
+    background:#00bcd4;
+    color:white;
+    padding:15px;
 }
 
-.icon{
-    font-size:60px;
-    margin-bottom:15px;
+td{
+    padding:15px;
+    border-bottom:1px solid rgba(255,255,255,.1);
 }
 
-.card h2{
-    margin-bottom:10px;
+tr:hover{
+    background:rgba(255,255,255,.05);
 }
 
-.card p{
-    color:#cfd8dc;
+.ok{
+    color:#4caf50;
+    font-weight:bold;
+}
+
+.no{
+    color:#ff5252;
+    font-weight:bold;
+}
+
+@media(max-width:768px){
+
+    h1{
+        font-size:22px;
+    }
+
+    th,td{
+        padding:10px;
+        font-size:13px;
+    }
 }
 
 </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>DANH MỤC PHẢN ỨNG HỮU CƠ</h1>
-</div>
+<h1>
+BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
+</h1>
 
-<div class="container">
+<div class="control">
 
-    <div class="card">
-        <div class="icon">🧪</div>
-        <h2>Hiđrocacbon</h2>
-        <p>Ankan, Anken, Ankin, Benzen</p>
-    </div>
+<select id="reagent">
 
-    <div class="card">
-        <div class="icon">🍷</div>
-        <h2>Ancol - Phenol</h2>
-        <p>Phản ứng nhận biết đặc trưng</p>
-    </div>
+<option value="Br2">Br₂</option>
 
-    <div class="card">
-        <div class="icon">🧫</div>
-        <h2>Anđehit - Xeton</h2>
-        <p>Thuốc thử Tollens, Cu(OH)₂</p>
-    </div>
+<option value="AgNO3">
+AgNO₃/NH₃
+</option>
 
-    <div class="card">
-        <div class="icon">⚗️</div>
-        <h2>Axit cacboxylic</h2>
-        <p>Nhận biết nhóm -COOH</p>
-    </div>
+<option value="CuOH2">
+Cu(OH)₂/OH⁻
+</option>
 
-    <div class="card">
-        <div class="icon">🧬</div>
-        <h2>Este - Lipit</h2>
-        <p>Phản ứng thủy phân</p>
-    </div>
+<option value="NaHCO3">
+NaHCO₃
+</option>
 
-    <div class="card">
-        <div class="icon">📖</div>
-        <h2>Tổng hợp thuốc thử</h2>
-        <p>Bảng tra cứu nhanh</p>
-    </div>
+<option value="Na">
+Na
+</option>
+
+</select>
 
 </div>
+
+<div class="table-container">
+
+<table>
+
+<thead>
+
+<tr>
+<th>HCHC</th>
+<th>Hiện tượng</th>
+<th>Tên phản ứng</th>
+<th>PTHH</th>
+</tr>
+
+</thead>
+
+<tbody id="tableBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+const data = {
+
+Br2:{
+
+"Anken":{
+result:"Mất màu dung dịch brom",
+reaction:"Phản ứng cộng brom",
+equation:"CH2=CH2 + Br2 → CH2Br-CH2Br"
+},
+
+"Ankin":{
+result:"Mất màu dung dịch brom",
+reaction:"Phản ứng cộng brom",
+equation:"HC≡CH + Br2 → CHBr=CHBr"
+},
+
+"Phenol":{
+result:"Kết tủa trắng",
+reaction:"Phản ứng thế brom",
+equation:"C6H5OH + 3Br2 → C6H2Br3OH↓ + 3HBr"
+},
+
+"Anđehit":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+},
+
+"Ancol":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+}
+
+},
+
+AgNO3:{
+
+"Anken":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+},
+
+"Ankin":{
+result:"Kết tủa bạc axetylua",
+reaction:"Phản ứng thế H linh động",
+equation:"HC≡CH + 2AgNO3 + 2NH3 → AgC≡CAg↓"
+},
+
+"Phenol":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+},
+
+"Anđehit":{
+result:"Xuất hiện gương bạc",
+reaction:"Phản ứng tráng bạc",
+equation:"RCHO + 2[Ag(NH3)2]OH → RCOONH4 + 2Ag↓"
+},
+
+"Ancol":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+}
+
+},
+
+CuOH2:{
+
+"Anken":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+},
+
+"Ankin":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+},
+
+"Phenol":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+},
+
+"Anđehit":{
+result:"Kết tủa đỏ gạch",
+reaction:"Phản ứng oxi hóa",
+equation:"RCHO + Cu(OH)2 → Cu2O↓"
+},
+
+"Ancol":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+}
+
+},
+
+NaHCO3:{
+
+"Anken":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+},
+
+"Axit cacboxylic":{
+result:"Sủi bọt khí CO₂",
+reaction:"Phản ứng axit-bazơ",
+equation:"RCOOH + NaHCO3 → RCOONa + CO2↑ + H2O"
+},
+
+"Phenol":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+}
+
+},
+
+Na:{
+
+"Ancol":{
+result:"Thoát khí H₂",
+reaction:"Phản ứng thế H của nhóm OH",
+equation:"2ROH + 2Na → 2RONa + H2↑"
+},
+
+"Phenol":{
+result:"Thoát khí H₂",
+reaction:"Phản ứng thế H của nhóm OH",
+equation:"2C6H5OH + 2Na → 2C6H5ONa + H2↑"
+},
+
+"Anken":{
+result:"Không phản ứng",
+reaction:"-",
+equation:"-"
+}
+
+}
+
+};
+
+const reagentSelect =
+document.getElementById("reagent");
+
+const tableBody =
+document.getElementById("tableBody");
+
+function renderTable(){
+
+const reagent =
+reagentSelect.value;
+
+const reactions =
+data[reagent];
+
+tableBody.innerHTML = "";
+
+for(const compound in reactions){
+
+const item =
+reactions[compound];
+
+const row =
+document.createElement("tr");
+
+const isNoReaction =
+item.result === "Không phản ứng";
+
+row.innerHTML = `
+<td>${compound}</td>
+
+<td class="${
+isNoReaction ? "no" : "ok"
+}">
+${item.result}
+</td>
+
+<td>${item.reaction}</td>
+
+<td>${item.equation}</td>
+`;
+
+tableBody.appendChild(row);
+
+}
+
+}
+
+reagentSelect.addEventListener(
+"change",
+renderTable
+);
+
+renderTable();
+
+</script>
 
 </body>
 </html>
