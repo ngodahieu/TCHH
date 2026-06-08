@@ -158,9 +158,8 @@ body{
     #0099ff);
 
     box-shadow:
-    0 0 10px #00d9ff,
-    0 0 25px #00d9ff,
-    0 0 50px #00d9ff;
+    0 0 8px #00d9ff,
+    0 0 15px #00d9ff;
 }
 
 .bond{
@@ -170,8 +169,7 @@ body{
     transform-origin:left center;
 
     box-shadow:
-    0 0 10px #00d9ff,
-    0 0 20px #00d9ff;
+    0 0 6px #00d9ff;
 }
 /* Electron */
 
@@ -288,6 +286,20 @@ radial-gradient(circle,
     }
 
 }
+@keyframes spin{
+
+    0%{
+        transform:
+        rotateX(65deg)
+        rotateY(0deg);
+    }
+
+    100%{
+        transform:
+        rotateX(65deg)
+        rotateY(360deg);
+    }
+}
 </style>
 </head>
 
@@ -315,16 +327,19 @@ BẮT ĐẦU
 
 const benzene = document.getElementById("benzene");
 
-const radius = 170;
+const isMobile = window.innerWidth < 768;
+
+const center = isMobile ? 150 : 250;
+const radius = isMobile ? 100 : 170;
 
 const points = [];
 
-for(let i=0;i<6;i++){
+for(let i=0;i<3;i++){
 
     const angle = i*Math.PI/3;
 
-    const x = 250 + radius*Math.cos(angle);
-    const y = 250 + radius*Math.sin(angle);
+    const x = center + radius*Math.cos(angle);
+const y = center + radius*Math.sin(angle);
 
     points.push({x,y});
 
@@ -382,8 +397,13 @@ for(let i=0;i<6;i++){
 
     electron.className = "electron";
 
-    electron.style.left = "334px";
-    electron.style.top = "164px";
+    const orbitRadius = radius;
+
+electron.style.left =
+(center + orbitRadius - 8) + "px";
+
+electron.style.top =
+(center - 8) + "px";
 
     orbit.appendChild(electron);
 
