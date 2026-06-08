@@ -147,13 +147,12 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import {
- getFirestore,
- collection,
- getDocs,
- query,
- where
-}
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+getFirestore,
+collection,
+query,
+where,
+onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBK7Z0a47xMnJe7uqcJkAm0EX27frDPTVM",
@@ -213,8 +212,7 @@ async function loadFirestoreData(){
         where("reagent","==",reagent)
     );
 
-    const snapshot =
-    await getDocs(q);
+    onSnapshot(q, (snapshot) => {
 
     tableBody.innerHTML = "";
 
@@ -247,7 +245,7 @@ async function loadFirestoreData(){
 
     });
 
-}
+});
 reagentSelect.addEventListener(
     "change",
     loadFirestoreData
