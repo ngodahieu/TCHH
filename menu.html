@@ -1,0 +1,153 @@
+```html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Danh Mục Phản Ứng Hữu Cơ</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    font-family:Arial,sans-serif;
+
+    background:
+    radial-gradient(circle at center,
+    #0b1730 0%,
+    #050d1a 50%,
+    #000000 100%);
+
+    color:white;
+}
+
+.header{
+    text-align:center;
+    padding:40px 20px;
+}
+
+.header h1{
+    font-size:40px;
+
+    text-shadow:
+    0 0 10px #00d9ff,
+    0 0 20px #00d9ff;
+}
+
+.container{
+
+    width:90%;
+    max-width:1200px;
+
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(260px,1fr));
+
+    gap:25px;
+}
+
+.card{
+
+    padding:35px;
+
+    border-radius:20px;
+
+    background:
+    rgba(255,255,255,0.05);
+
+    backdrop-filter:blur(10px);
+
+    border:1px solid rgba(0,217,255,.3);
+
+    cursor:pointer;
+
+    transition:.35s;
+
+    text-align:center;
+}
+
+.card:hover{
+
+    transform:
+    translateY(-8px)
+    scale(1.03);
+
+    box-shadow:
+    0 0 20px #00d9ff,
+    0 0 40px rgba(0,217,255,.4);
+}
+
+.icon{
+    font-size:60px;
+    margin-bottom:15px;
+}
+
+.card h2{
+    margin-bottom:10px;
+}
+
+.card p{
+    color:#cfd8dc;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>DANH MỤC PHẢN ỨNG HỮU CƠ</h1>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <div class="icon">🧪</div>
+        <h2>Hiđrocacbon</h2>
+        <p>Ankan, Anken, Ankin, Benzen</p>
+    </div>
+
+    <div class="card">
+        <div class="icon">🍷</div>
+        <h2>Ancol - Phenol</h2>
+        <p>Phản ứng nhận biết đặc trưng</p>
+    </div>
+
+    <div class="card">
+        <div class="icon">🧫</div>
+        <h2>Anđehit - Xeton</h2>
+        <p>Thuốc thử Tollens, Cu(OH)₂</p>
+    </div>
+
+    <div class="card">
+        <div class="icon">⚗️</div>
+        <h2>Axit cacboxylic</h2>
+        <p>Nhận biết nhóm -COOH</p>
+    </div>
+
+    <div class="card">
+        <div class="icon">🧬</div>
+        <h2>Este - Lipit</h2>
+        <p>Phản ứng thủy phân</p>
+    </div>
+
+    <div class="card">
+        <div class="icon">📖</div>
+        <h2>Tổng hợp thuốc thử</h2>
+        <p>Bảng tra cứu nhanh</p>
+    </div>
+
+</div>
+
+</body>
+</html>
+```
