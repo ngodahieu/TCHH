@@ -144,6 +144,7 @@ BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
 </div>
 <script>
     let allData = [];
+    let unsubscribe = null;
 </script>
 <script type="module">
 
@@ -175,29 +176,31 @@ const db = getFirestore(app);
 let selectedReagent = "";
 let selectedReaction = "";
 let allData = [];
-async function loadFirestoreData(){
+let unsubscribe = null;
+function loadFirestoreData() {
 
-    if(unsubscribe) unsubscribe();
+    if (unsubscribe) unsubscribe();
 
-    let q = collection(db,"reactions");
+    let q = collection(db, "reactions");
 
     let constraints = [];
 
-    if(selectedReagent){
-        constraints.push(where("reagent","==",selectedReagent));
+    if (selectedReagent) {
+        constraints.push(where("reagent", "==", selectedReagent));
     }
 
-    if(selectedReaction){
-        constraints.push(where("reactionName","==",selectedReaction));
+    if (selectedReaction) {
+        constraints.push(where("reactionName", "==", selectedReaction));
     }
 
-    const finalQuery = constraints.length ? query(q, ...constraints) : q;
+    const finalQuery =
+        constraints.length ? query(q, ...constraints) : q;
 
     unsubscribe = onSnapshot(finalQuery, (snapshot) => {
 
         allData = [];
 
-        snapshot.forEach(doc=>{
+        snapshot.forEach(doc => {
             allData.push(doc.data());
         });
 
