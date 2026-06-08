@@ -180,10 +180,14 @@ async function loadFirestoreData(){
     const reagent =
     document.getElementById("reagent").value;
 
-    const q = query(
-        collection(db,"reactions"),
-        where("reagent","==",reagent)
-    );
+   const reactionName =
+document.getElementById("reactionNameSelect").value;
+
+const q = query(
+    collection(db,"reactions"),
+    where("reagent","==",reagent),
+    where("reactionName","==",reactionName)
+);
 
     onSnapshot(q, (snapshot) => {
 
@@ -272,6 +276,9 @@ reagentSelect.addEventListener(
     "change",
     loadFirestoreData
 );
+document
+.getElementById("reactionNameSelect")
+.addEventListener("change", loadFirestoreData);
 document.getElementById("searchInput")
 .addEventListener("input", function(){
 
