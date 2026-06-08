@@ -188,7 +188,7 @@ function loadFirestoreData() {
         constraints.push(where("reagent", "==", selectedReagent));
     }
 
-    if (selectedReaction) {
+    if (selectedCondition) {
         constraints.push(where("condition","==", selectedCondition));
     }
 
@@ -232,7 +232,7 @@ async function loadReagents(){
 }
 async function loadReactionNames(){
 
-    const select = document.getElementById("reactionNameSelect");
+    const select = document.getElementById("conditionSelect");
 
     select.innerHTML = `<option value="">-- Tất cả phản ứng --</option>`;
 
@@ -306,14 +306,14 @@ document.getElementById("reagent").addEventListener("change", (e) => {
     selectedReagent = e.target.value;
 
     // reset phản ứng
-    selectedReaction = "";
+    selectedCondition = "";
     document.getElementById("conditionSelect").value = "";
 
     loadFirestoreData();
 });
 document.getElementById("conditionSelect").addEventListener("change", (e) => {
 
-    selectedReaction = e.target.value;
+    selectedCondition = e.target.value;
 
     // reset thuốc thử
     selectedReagent = "";
