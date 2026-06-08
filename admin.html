@@ -102,7 +102,7 @@ Thêm thuốc thử
 <select id="reagent"></select>
 
 <input id="phenomenon" placeholder="Hiện tượng">
-
+<input id="condition" placeholder="Điều kiện phản ứng">
 <input id="reactionName" placeholder="Tên phản ứng">
 
 <textarea
@@ -127,6 +127,7 @@ Cập nhật
 <th>HCHC</th>
 <th>Thuốc thử</th>
 <th>Hiện tượng</th>
+<th>Điều kiện</th>
 <th>Tên phản ứng</th>
 <th>PTHH</th>
 <th>Sửa</th>
@@ -363,6 +364,9 @@ try{
 
         equation:
         document.getElementById("equation").value
+            
+        condition: 
+        document.getElementById("condition").value
     }
     );
 const reagentName =
@@ -401,6 +405,7 @@ document.getElementById("reagent").value = "";
 document.getElementById("phenomenon").value = "";
 document.getElementById("reactionName").value = "";
 document.getElementById("equation").value = "";
+document.getElementById("condition").value = "";
     loadData();
 
 }catch(error){
@@ -441,6 +446,7 @@ list.innerHTML += `
 
 <td>${item.equation || ""}</td>
 
+<td>${item.condition || ""}</td>
 <td>
 <button onclick="editReaction('${docSnap.id}')">
 Sửa
@@ -498,6 +504,9 @@ item.reactionName || "";
 document.getElementById("equation").value =
 item.equation || "";
 
+document.getElementById("condition").value =
+item.condition || "";
+    
 document.getElementById("updateBtn").style.display =
 "inline-block";
 
@@ -523,7 +532,10 @@ reactionName:
 document.getElementById("reactionName").value,
 
 equation:
-document.getElementById("equation").value
+document.getElementById("equation").value,
+
+condition: 
+document.getElementById("condition").value
 }
 );
 
