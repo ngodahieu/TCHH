@@ -116,7 +116,7 @@ BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
 </select>
 
 <!-- THÊM CÁI NÀY -->
-<select id="reactionNameSelect"><option value="">-- Tất cả phản ứng --</option></select>
+<select id="conditionSelect"><option value="">-- Tất cả phản ứng --</option></select>
 </div>
 
 <div class="table-container">
@@ -173,7 +173,7 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 let selectedReagent = "";
-let selectedReaction = "";
+let selectedCondition = "";
 let allData = [];
 let unsubscribe = null;
 function loadFirestoreData() {
@@ -189,7 +189,7 @@ function loadFirestoreData() {
     }
 
     if (selectedReaction) {
-        constraints.push(where("reactionName", "==", selectedReaction));
+        constraints.push(where("condition","==", selectedCondition));
     }
 
     const finalQuery =
@@ -241,7 +241,7 @@ async function loadReactionNames(){
     const set = new Set();
 
     snapshot.forEach(doc=>{
-        set.add(doc.data().reactionName);
+        set.add(doc.data().condition);
     });
 
     set.forEach(name=>{
@@ -307,11 +307,11 @@ document.getElementById("reagent").addEventListener("change", (e) => {
 
     // reset phản ứng
     selectedReaction = "";
-    document.getElementById("reactionNameSelect").value = "";
+    document.getElementById("conditionSelect").value = "";
 
     loadFirestoreData();
 });
-document.getElementById("reactionNameSelect").addEventListener("change", (e) => {
+document.getElementById("conditionSelect").addEventListener("change", (e) => {
 
     selectedReaction = e.target.value;
 
