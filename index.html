@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -7,6 +8,7 @@
 <title>BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ</title>
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -18,8 +20,8 @@ body{
     height:100vh;
     background:
     radial-gradient(circle at center,
-    #0c1c3a 0%,
-    #07101f 50%,
+    #0b1730 0%,
+    #050d1a 50%,
     #000000 100%);
     font-family:Arial, sans-serif;
 }
@@ -28,7 +30,7 @@ body{
 
 .title{
     position:absolute;
-    top:10%;
+    top:8%;
     width:100%;
     text-align:center;
     color:white;
@@ -39,7 +41,7 @@ body{
     0 0 10px #00bfff,
     0 0 20px #00bfff,
     0 0 40px #00bfff;
-    z-index:10;
+    z-index:100;
 }
 
 /* Nút bắt đầu */
@@ -53,63 +55,159 @@ body{
     font-size:32px;
     font-weight:bold;
     color:white;
-    border:3px solid #00bfff;
+    border:2px solid #00d9ff;
     border-radius:15px;
-    background:rgba(0,191,255,0.15);
+    background:rgba(0,217,255,0.15);
     backdrop-filter:blur(10px);
     cursor:pointer;
-    transition:0.4s;
+    transition:.4s;
+    z-index:100;
+
     box-shadow:
-    0 0 15px #00bfff,
-    0 0 30px #00bfff;
-    z-index:10;
+    0 0 10px #00d9ff,
+    0 0 25px #00d9ff,
+    0 0 50px #00d9ff;
 }
 
 .start-btn:hover{
     transform:translate(-50%,-50%) scale(1.08);
-    background:#00bfff;
+
     box-shadow:
-    0 0 20px #00bfff,
-    0 0 60px #00bfff,
-    0 0 120px #00bfff;
+    0 0 20px #00d9ff,
+    0 0 60px #00d9ff,
+    0 0 120px #00d9ff;
 }
 
 /* Công thức hóa học */
 
 .molecule{
     position:absolute;
-    color:rgba(255,255,255,0.22);
-    font-size:30px;
+    color:rgba(255,255,255,.22);
     font-weight:bold;
     white-space:nowrap;
     animation:float linear infinite;
 }
+
+/* Phương trình */
+
+.reaction{
+    position:absolute;
+    color:rgba(0,255,255,.08);
+    font-size:22px;
+    white-space:nowrap;
+    animation:float linear infinite;
+}
+
+/* Hiệu ứng bay */
 
 @keyframes float{
     from{
         transform:translateY(110vh);
     }
     to{
-        transform:translateY(-150px);
+        transform:translateY(-200px);
     }
 }
 
-/* Phương trình phía sau */
+/* ========================= */
+/* VÒNG BENZEN 3D */
+/* ========================= */
 
-.reaction{
+.benzene-container{
     position:absolute;
-    color:rgba(0,255,255,0.08);
-    font-size:22px;
-    white-space:nowrap;
-    animation:float linear infinite;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    perspective:1200px;
+    z-index:5;
+    pointer-events:none;
 }
+
+.benzene{
+    width:500px;
+    height:500px;
+    position:relative;
+    transform-style:preserve-3d;
+    animation:spin 18s linear infinite;
+}
+
+@keyframes spin{
+    0%{
+        transform:rotateX(0deg) rotateY(0deg);
+    }
+    100%{
+        transform:rotateX(360deg) rotateY(360deg);
+    }
+}
+
+.atom{
+    position:absolute;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:white;
+    font-weight:bold;
+
+    background:
+    radial-gradient(circle,
+    #6ef2ff,
+    #0099ff);
+
+    box-shadow:
+    0 0 10px #00d9ff,
+    0 0 25px #00d9ff,
+    0 0 50px #00d9ff;
+}
+
+.bond{
+    position:absolute;
+    height:4px;
+    background:#00d9ff;
+    transform-origin:left center;
+
+    box-shadow:
+    0 0 10px #00d9ff,
+    0 0 20px #00d9ff;
+}
+
+/* ánh sáng nền */
+
+.glow{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:600px;
+    height:600px;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle,
+    rgba(0,217,255,.15),
+    transparent 70%);
+
+    filter:blur(30px);
+    z-index:1;
+}
+
 </style>
 </head>
 
 <body>
 
+<div class="glow"></div>
+
 <div class="title">
 BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
+</div>
+
+<div class="benzene-container">
+    <div class="benzene" id="benzene"></div>
 </div>
 
 <button class="start-btn">
@@ -118,86 +216,152 @@ BẮT ĐẦU
 
 <script>
 
+/* ========================= */
+/* BENZENE 3D */
+/* ========================= */
+
+const benzene = document.getElementById("benzene");
+
+const radius = 170;
+
+const points = [];
+
+for(let i=0;i<6;i++){
+
+    const angle = i*Math.PI/3;
+
+    const x = 250 + radius*Math.cos(angle);
+    const y = 250 + radius*Math.sin(angle);
+
+    points.push({x,y});
+
+    const atom = document.createElement("div");
+    atom.className = "atom";
+
+    atom.innerHTML = "C";
+
+    atom.style.left = (x-25)+"px";
+    atom.style.top  = (y-25)+"px";
+
+    benzene.appendChild(atom);
+}
+
+/* liên kết */
+
+for(let i=0;i<6;i++){
+
+    const p1 = points[i];
+    const p2 = points[(i+1)%6];
+
+    const dx = p2.x-p1.x;
+    const dy = p2.y-p1.y;
+
+    const length = Math.sqrt(dx*dx+dy*dy);
+
+    const angle = Math.atan2(dy,dx)*180/Math.PI;
+
+    const bond = document.createElement("div");
+    bond.className = "bond";
+
+    bond.style.width = length+"px";
+    bond.style.left = p1.x+"px";
+    bond.style.top  = p1.y+"px";
+
+    bond.style.transform =
+    `rotate(${angle}deg)`;
+
+    benzene.appendChild(bond);
+}
+
+/* ========================= */
+/* PHẢN ỨNG HÓA HỌC */
+/* ========================= */
+
 const formulas = [
+
 "CH₄",
-"C₂H₄",
 "C₂H₂",
+"C₂H₄",
 "C₂H₅OH",
 "CH₃COOH",
 "HCHO",
 "CH₃CHO",
 "C₆H₆",
 "Phenol",
-"Toluene",
 "Ester",
-"Amine",
-"Alcohol",
-"Aldehyde",
-"ketone",
-"COOH",
+"Ancol",
+"Amin",
+"Xeton",
 "CHO",
+"COOH",
 "OH",
 "NH₂"
+
 ];
 
 const reactions = [
-"C₂H₄ + Br₂ → C₂H₄Br₂",
+
+"C₂H₄ + Br₂ → mất màu",
 "RCHO + AgNO₃/NH₃ → Ag↓",
 "RCHO + Cu(OH)₂ → Cu₂O↓",
 "C₂H₅OH + Na → H₂↑",
 "CH₃COOH + NaHCO₃ → CO₂↑",
-"C₆H₅OH + Br₂ → Kết tủa trắng",
-"Alkyne + AgNO₃/NH₃ → Kết tủa",
-"Protein + Cu(OH)₂ → Màu tím",
+"C₆H₅OH + Br₂ → kết tủa trắng",
+"Protein + Cu(OH)₂ → màu tím",
 "Glucose + AgNO₃ → Ag↓",
-"Ester + NaOH → Muối + Alcohol"
+"Ester + NaOH → muối + ancol"
+
 ];
 
 function createFormula(){
 
-    const item=document.createElement("div");
-    item.classList.add("molecule");
+    const el = document.createElement("div");
 
-    item.innerHTML=
+    el.className = "molecule";
+
+    el.innerHTML =
     formulas[Math.floor(Math.random()*formulas.length)];
 
-    item.style.left=Math.random()*100+"vw";
+    el.style.left =
+    Math.random()*100+"vw";
 
-    item.style.animationDuration=
-    10+Math.random()*15+"s";
+    el.style.fontSize =
+    18 + Math.random()*30+"px";
 
-    item.style.fontSize=
-    20+Math.random()*30+"px";
+    el.style.animationDuration =
+    10 + Math.random()*15+"s";
 
-    document.body.appendChild(item);
+    document.body.appendChild(el);
 
     setTimeout(()=>{
-        item.remove();
+        el.remove();
     },25000);
 }
 
 function createReaction(){
 
-    const item=document.createElement("div");
-    item.classList.add("reaction");
+    const el = document.createElement("div");
 
-    item.innerHTML=
+    el.className = "reaction";
+
+    el.innerHTML =
     reactions[Math.floor(Math.random()*reactions.length)];
 
-    item.style.left=Math.random()*80+"vw";
+    el.style.left =
+    Math.random()*80+"vw";
 
-    item.style.animationDuration=
-    18+Math.random()*20+"s";
+    el.style.animationDuration =
+    20 + Math.random()*15+"s";
 
-    document.body.appendChild(item);
+    document.body.appendChild(el);
 
     setTimeout(()=>{
-        item.remove();
+        el.remove();
     },35000);
 }
 
-setInterval(createFormula,400);
-setInterval(createReaction,1400);
+setInterval(createFormula,350);
+setInterval(createReaction,1200);
 
 for(let i=0;i<30;i++) createFormula();
 for(let i=0;i<10;i++) createReaction();
@@ -206,3 +370,4 @@ for(let i=0;i<10;i++) createReaction();
 
 </body>
 </html>
+```
