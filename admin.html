@@ -57,9 +57,31 @@ td,th{
 
 <h1>Quản lý phản ứng hữu cơ</h1>
 
-<input id="compound" placeholder="HCHC">
+<h3>Quản lý HCHC</h3>
 
-<input id="reagent" placeholder="Thuốc thử">
+<input
+id="newCompound"
+placeholder="Tên HCHC">
+
+<button onclick="addCompound()">
+Thêm HCHC
+</button>
+
+<h3>Quản lý thuốc thử</h3>
+
+<input
+id="newReagent"
+placeholder="Tên thuốc thử">
+
+<button onclick="addReagent()">
+Thêm thuốc thử
+</button>
+
+<hr>
+
+<select id="compound"></select>
+
+<select id="reagent"></select>
 
 <input id="phenomenon" placeholder="Hiện tượng">
 
@@ -133,6 +155,122 @@ initializeApp(firebaseConfig);
 
 const db =
 getFirestore(app);
+window.addCompound =
+async function(){
+
+    const name =
+    document.getElementById(
+    "newCompound"
+    ).value;
+
+    if(!name) return;
+
+    await addDoc(
+    collection(db,"compounds"),
+    {
+        name:name
+    }
+    );
+
+    document.getElementById(
+    "newCompound"
+    ).value = "";
+
+    loadCompounds();
+
+}
+window.addReagent =
+async function(){
+
+    const name =
+    document.getElementById(
+    "newReagent"
+    ).value;
+
+    if(!name) return;
+
+    await addDoc(
+    collection(db,"reagents"),
+    {
+        name:name
+    }
+    );
+
+    document.getElementById(
+    "newReagent"
+    ).value = "";
+
+    loadReagents();
+
+}
+async function loadCompounds(){
+
+    const select =
+    document.getElementById(
+    "compound"
+    );
+
+    select.innerHTML = "";
+
+    const snapshot =
+    await getDocs(
+    collection(db,"compounds")
+    );
+
+    snapshot.forEach(docSnap=>{
+
+        const option =
+        document.createElement(
+        "option"
+        );
+
+        option.value =
+        docSnap.data().name;
+
+        option.textContent =
+        docSnap.data().name;
+
+        select.appendChild(
+        option
+        );
+
+    });
+
+}
+async function loadReagents(){
+
+    const select =
+    document.getElementById(
+    "reagent"
+    );
+
+    select.innerHTML = "";
+
+    const snapshot =
+    await getDocs(
+    collection(db,"reagents")
+    );
+
+    snapshot.forEach(docSnap=>{
+
+        const option =
+        document.createElement(
+        "option"
+        );
+
+        option.value =
+        docSnap.data().name;
+
+        option.textContent =
+        docSnap.data().name;
+
+        select.appendChild(
+        option
+        );
+
+    });
+
+}
 let editingId = null;
 window.addReaction = async function(){
 
@@ -329,6 +467,8 @@ document.getElementById("updateBtn").style.display =
 loadData();
 
 }
+loadCompounds();
+loadReagents();
 loadData();
 </script>
 </body>
