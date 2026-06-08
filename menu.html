@@ -114,27 +114,6 @@ BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
 <div class="control">
 
 <select id="reagent">
-<option value="Halogen (Br2, Cl2, I2, F2)">
-Halogen (Br₂, Cl₂, I₂, F₂)
-</option>
-<option value="Br2">Br₂</option>
-
-<option value="AgNO3">
-AgNO₃/NH₃
-</option>
-
-<option value="CuOH2">
-Cu(OH)₂/OH⁻
-</option>
-
-<option value="NaHCO3">
-NaHCO₃
-</option>
-
-<option value="Na">
-Na
-</option>
-
 </select>
 
 </div>
@@ -189,6 +168,36 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+async function loadReagents(){
+
+    const reagentSelect =
+    document.getElementById("reagent");
+
+    reagentSelect.innerHTML = "";
+
+    const snapshot =
+    await getDocs(
+        collection(db,"reagents")
+    );
+
+    snapshot.forEach(docSnap=>{
+
+        const option =
+        document.createElement("option");
+
+        option.value =
+        docSnap.data().name;
+
+        option.textContent =
+        docSnap.data().name;
+
+        reagentSelect.appendChild(option);
+
+    });
+
+    loadFirestoreData();
+
+}
 const reagentSelect =
 document.getElementById("reagent");
 
@@ -244,7 +253,7 @@ reagentSelect.addEventListener(
     loadFirestoreData
 );
 
-loadFirestoreData();
+loadReagents();
 </script>
 </body>
 </html>
