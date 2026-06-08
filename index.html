@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    overflow:hidden;
+    height:100vh;
+    background:
+    radial-gradient(circle at center,
+    #0c1c3a 0%,
+    #07101f 50%,
+    #000000 100%);
+    font-family:Arial, sans-serif;
+}
+
+/* Tiêu đề */
+
+.title{
+    position:absolute;
+    top:10%;
+    width:100%;
+    text-align:center;
+    color:white;
+    font-size:42px;
+    font-weight:bold;
+    letter-spacing:3px;
+    text-shadow:
+    0 0 10px #00bfff,
+    0 0 20px #00bfff,
+    0 0 40px #00bfff;
+    z-index:10;
+}
+
+/* Nút bắt đầu */
+
+.start-btn{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    padding:25px 80px;
+    font-size:32px;
+    font-weight:bold;
+    color:white;
+    border:3px solid #00bfff;
+    border-radius:15px;
+    background:rgba(0,191,255,0.15);
+    backdrop-filter:blur(10px);
+    cursor:pointer;
+    transition:0.4s;
+    box-shadow:
+    0 0 15px #00bfff,
+    0 0 30px #00bfff;
+    z-index:10;
+}
+
+.start-btn:hover{
+    transform:translate(-50%,-50%) scale(1.08);
+    background:#00bfff;
+    box-shadow:
+    0 0 20px #00bfff,
+    0 0 60px #00bfff,
+    0 0 120px #00bfff;
+}
+
+/* Công thức hóa học */
+
+.molecule{
+    position:absolute;
+    color:rgba(255,255,255,0.22);
+    font-size:30px;
+    font-weight:bold;
+    white-space:nowrap;
+    animation:float linear infinite;
+}
+
+@keyframes float{
+    from{
+        transform:translateY(110vh);
+    }
+    to{
+        transform:translateY(-150px);
+    }
+}
+
+/* Phương trình phía sau */
+
+.reaction{
+    position:absolute;
+    color:rgba(0,255,255,0.08);
+    font-size:22px;
+    white-space:nowrap;
+    animation:float linear infinite;
+}
+</style>
+</head>
+
+<body>
+
+<div class="title">
+BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
+</div>
+
+<button class="start-btn">
+BẮT ĐẦU
+</button>
+
+<script>
+
+const formulas = [
+"CH₄",
+"C₂H₄",
+"C₂H₂",
+"C₂H₅OH",
+"CH₃COOH",
+"HCHO",
+"CH₃CHO",
+"C₆H₆",
+"Phenol",
+"Toluen",
+"Ester",
+"Amin",
+"Ancol",
+"Anđehit",
+"Xeton",
+"COOH",
+"CHO",
+"OH",
+"NH₂"
+];
+
+const reactions = [
+"C₂H₄ + Br₂ → C₂H₄Br₂",
+"RCHO + AgNO₃/NH₃ → Ag↓",
+"RCHO + Cu(OH)₂ → Cu₂O↓",
+"C₂H₅OH + Na → H₂↑",
+"CH₃COOH + NaHCO₃ → CO₂↑",
+"C₆H₅OH + Br₂ → Kết tủa trắng",
+"Ankin + AgNO₃/NH₃ → Kết tủa",
+"Protein + Cu(OH)₂ → Màu tím",
+"Glucose + AgNO₃ → Ag↓",
+"Ester + NaOH → Muối + Ancol"
+];
+
+function createFormula(){
+
+    const item=document.createElement("div");
+    item.classList.add("molecule");
+
+    item.innerHTML=
+    formulas[Math.floor(Math.random()*formulas.length)];
+
+    item.style.left=Math.random()*100+"vw";
+
+    item.style.animationDuration=
+    10+Math.random()*15+"s";
+
+    item.style.fontSize=
+    20+Math.random()*30+"px";
+
+    document.body.appendChild(item);
+
+    setTimeout(()=>{
+        item.remove();
+    },25000);
+}
+
+function createReaction(){
+
+    const item=document.createElement("div");
+    item.classList.add("reaction");
+
+    item.innerHTML=
+    reactions[Math.floor(Math.random()*reactions.length)];
+
+    item.style.left=Math.random()*80+"vw";
+
+    item.style.animationDuration=
+    18+Math.random()*20+"s";
+
+    document.body.appendChild(item);
+
+    setTimeout(()=>{
+        item.remove();
+    },35000);
+}
+
+setInterval(createFormula,400);
+setInterval(createReaction,1400);
+
+for(let i=0;i<30;i++) createFormula();
+for(let i=0;i<10;i++) createReaction();
+
+</script>
+
+</body>
+</html>
