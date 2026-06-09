@@ -137,6 +137,11 @@ onclick="updateReaction()"
 style="display:none;background:#4caf50;">
 Cập nhật
 </button>
+<button
+onclick="fixReactionData()"
+style="background:#ff9800;">
+Sửa dữ liệu bị đảo
+</button>
 <table>
 
 <thead>
@@ -173,7 +178,8 @@ getDocs,
 deleteDoc,
 doc,
 getDoc,
-updateDoc
+updateDoc,
+writeBatch
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
@@ -256,9 +262,10 @@ async function(){
         }
     );
 
-    document.getElementById("newReactionType").value = "";
+    document.getElementById("newReactionName").selectedIndex = 0;
 
     loadReactionTypeTable();
+    loadReactionTypes();
 }
 async function loadCompounds(){
 
@@ -480,6 +487,7 @@ async function(id){
     );
 
     loadReactionTypeTable();
+loadReactionTypes();
 }
 let editingId = null;
 window.addReaction = async function(){
@@ -577,9 +585,9 @@ list.innerHTML += `
 
 <td>${item.phenomenon || ""}</td>
 
-<td>${item.reactionName || ""}</td>
-
 <td>${item.condition || ""}</td>
+
+<td>${item.reactionName || ""}</td>
 <td>
 <button onclick="editReaction('${docSnap.id}')">
 Sửa
@@ -675,6 +683,38 @@ document.getElementById("updateBtn").style.display =
 
 loadData();
 
+}
+window.fixReactionData = async function(){
+
+    if(!confirm("Đảo toàn bộ Điều kiện và Tên phản ứng?"))
+        return;
+
+    const snapshot =
+    await getDocs(
+        collection(db,"reactions")
+    );
+
+    const batch = writeBatch(db);
+
+    snapshot.forEach(docSnap=>{
+
+        const item = docSnap.data();
+
+        batch.update(
+            doc(db,"reactions",docSnap.id),
+            {
+                reactionName: item.condition || "",
+                condition: item.reactionName || ""
+            }
+        );
+
+    });
+
+    await batch.commit();
+
+    alert("Đã sửa toàn bộ dữ liệu");
+
+    loadData();
 }
 loadCompounds();
 loadReagents();
