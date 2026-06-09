@@ -124,6 +124,9 @@ Thêm tên phản ứng
 
 <select id="reagent"></select>
 <select id="reactionName"></select>
+<input
+id="reactionName2"
+placeholder="Tên phản ứng bổ sung (nếu có)">
 <input id="phenomenon" placeholder="Hiện tượng">
 <input id="condition" placeholder="Điều kiện phản ứng">
 
@@ -507,7 +510,10 @@ try{
         document.getElementById("phenomenon").value,
 
         reactionName:
-        document.getElementById("reactionName").value,
+document.getElementById("reactionName").value,
+
+reactionName2:
+document.getElementById("reactionName2").value,
             
         condition: 
         document.getElementById("condition").value
@@ -587,7 +593,10 @@ list.innerHTML += `
 
 <td>${item.condition || ""}</td>
 
-<td>${item.reactionName || ""}</td>
+<td>
+${item.reactionName || ""}
+${item.reactionName2 ? "<br><small>(" + item.reactionName2 + ")</small>" : ""}
+</td>
 <td>
 <button onclick="editReaction('${docSnap.id}')">
 Sửa
@@ -641,6 +650,8 @@ item.phenomenon || "";
 
 document.getElementById("reactionName").value =
 item.reactionName || "";
+document.getElementById("reactionName2").value =
+item.reactionName2 || "";
 
 document.getElementById("condition").value =
 item.condition || "";
@@ -668,7 +679,8 @@ document.getElementById("phenomenon").value,
 
 reactionName:
 document.getElementById("reactionName").value,
-
+reactionName2:
+document.getElementById("reactionName2").value,
 condition: 
 document.getElementById("condition").value
 }
