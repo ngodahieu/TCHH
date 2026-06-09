@@ -244,23 +244,30 @@ async function loadReagents(){
 }
 async function loadReactionNames(){
 
-    const select = document.getElementById("reactionSelect");
+    const select =
+    document.getElementById("reactionSelect");
 
-    select.innerHTML = `<option value="">-- Tất cả phản ứng --</option>`;
+    select.innerHTML =
+    `<option value="">-- Tất cả phản ứng --</option>`;
 
-    const snapshot = await getDocs(collection(db,"reactions"));
+    const snapshot =
+    await getDocs(
+        collection(db,"reactionTypes")
+    );
 
-    const set = new Set();
+    snapshot.forEach(docSnap => {
 
-    snapshot.forEach(doc=>{
-    set.add(doc.data().reactionName);
-});
+        const option =
+        document.createElement("option");
 
-    set.forEach(name=>{
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
+        option.value =
+        docSnap.data().name;
+
+        option.textContent =
+        docSnap.data().name;
+
         select.appendChild(option);
+
     });
 }
 function renderTable(data){
