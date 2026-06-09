@@ -237,19 +237,23 @@ async function loadReagents(){
 
     const reagentSelect =
     document.getElementById("reagent");
-    const tableBody = document.getElementById("tableBody");
 
     const snapshot =
     await getDocs(collection(db,"reagents"));
 
-    reagentSelect.innerHTML = "";
+    reagentSelect.innerHTML =
+    `<option value="">-- Tất cả thuốc thử --</option>`;
 
     snapshot.forEach(docSnap => {
 
-        const option = document.createElement("option");
+        const option =
+        document.createElement("option");
 
-        option.value = docSnap.data().name;
-        option.textContent = docSnap.data().name;
+        option.value =
+        docSnap.data().name;
+
+        option.textContent =
+        docSnap.data().name;
 
         reagentSelect.appendChild(option);
 
