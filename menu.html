@@ -244,7 +244,7 @@ async function loadReagents(){
 }
 async function loadReactionNames(){
 
-    const select = document.getElementById("conditionSelect");
+    const select = document.getElementById("reactionSelect");
 
     select.innerHTML = `<option value="">-- Tất cả phản ứng --</option>`;
 
@@ -295,7 +295,7 @@ reagentSelect.addEventListener(
     loadFirestoreData
 );
 document
-.getElementById("conditionSelect")
+.getElementById("reactionSelect")
 .addEventListener("change", loadFirestoreData);
 const searchInput = document.getElementById("searchInput");
 
@@ -317,7 +317,7 @@ document.getElementById("reagent").addEventListener("change", (e) => {
     selectedReagent = e.target.value;
     loadFirestoreData();
 });
-document.getElementById("conditionSelect").addEventListener("change", (e) => {
+document.getElementById("reactionSelect").addEventListener("change", (e) => {
     selectedReaction = e.target.value;
     applyFilter();
 });
