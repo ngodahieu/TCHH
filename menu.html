@@ -129,6 +129,7 @@ BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
 
 <tr>
 <th>HCHC</th>
+<th>Thuốc thử</th>
 <th>Hiện tượng</th>
 <th>Điều kiện</th>
 <th>Tên phản ứng</th>
@@ -295,10 +296,19 @@ function renderTable(data){
         const isNoReaction =
         item.phenomenon === "Không phản ứng";
 
-        row.innerHTML = `
-<td>${item.compound}</td>
-<td class="${isNoReaction ? "no":"ok"}">${item.phenomenon}</td>
+       row.innerHTML = `
+<td>${item.compound || ""}</td>
+
+<td>
+<b>${item.reagent || ""}</b>
+</td>
+
+<td class="${isNoReaction ? "no":"ok"}">
+${item.phenomenon || ""}
+</td>
+
 <td>${item.condition || ""}</td>
+
 <td>
 ${item.reactionName || ""}
 ${item.reactionName2 ? "<br><small>(" + item.reactionName2 + ")</small>" : ""}
