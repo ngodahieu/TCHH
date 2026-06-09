@@ -209,12 +209,26 @@ function applyFilter() {
     let data = allData;
 
     if (selectedReaction) {
-        data = data.filter(item =>
-    (item.reactionName || "")
-    .toLowerCase()
-    .includes(selectedReaction.toLowerCase())
-);
-    }
+
+    data = data.filter(item => {
+
+        const name1 =
+        (item.reactionName || "").toLowerCase();
+
+        const name2 =
+        (item.reactionName2 || "").toLowerCase();
+
+        const selected =
+        selectedReaction.toLowerCase();
+
+        return (
+            name1.includes(selected) ||
+            name2.includes(selected)
+        );
+
+    });
+
+}
 
     renderTable(data);
 }
