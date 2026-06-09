@@ -70,6 +70,7 @@ Thêm HCHC
 <thead>
 <tr>
 <th>Danh sách HCHC</th>
+<th>Xóa</th>
 </tr>
 </thead>
 
@@ -89,10 +90,32 @@ Thêm thuốc thử
 <thead>
 <tr>
 <th>Danh sách thuốc thử</th>
+<th>Xóa</th>
 </tr>
 </thead>
 
 <tbody id="reagentList">
+</tbody>
+</table>
+<h3>Quản lý tên phản ứng</h3>
+
+<input
+id="newReactionType"
+placeholder="Tên phản ứng">
+
+<button onclick="addReactionType()">
+Thêm tên phản ứng
+</button>
+
+<table>
+<thead>
+<tr>
+<th>Danh sách tên phản ứng</th>
+<th>Xóa</th>
+</tr>
+</thead>
+
+<tbody id="reactionTypeList">
 </tbody>
 </table>
 <hr>
@@ -100,10 +123,10 @@ Thêm thuốc thử
 <select id="compound"></select>
 
 <select id="reagent"></select>
-
+<select id="reactionName"></select>
 <input id="phenomenon" placeholder="Hiện tượng">
 <input id="condition" placeholder="Điều kiện phản ứng">
-<input id="reactionName" placeholder="Tên phản ứng">
+
 
 <button onclick="addReaction()">
 Thêm phản ứng
@@ -218,6 +241,25 @@ async function(){
 loadReagentTable();
 
 }
+window.addReactionType =
+async function(){
+
+    const name =
+    document.getElementById("newReactionType").value;
+
+    if(!name) return;
+
+    await addDoc(
+        collection(db,"reactionTypes"),
+        {
+            name:name
+        }
+    );
+
+    document.getElementById("newReactionType").value = "";
+
+    loadReactionTypeTable();
+}
 async function loadCompounds(){
 
     const select =
@@ -269,13 +311,31 @@ async function loadCompoundTable(){
     snapshot.forEach(docSnap=>{
 
         list.innerHTML += `
-        <tr>
-        <td>${docSnap.data().name}</td>
-        </tr>
-        `;
+<tr>
+<td>${docSnap.data().name}</td>
+
+<td>
+<button onclick="deleteCompound('${docSnap.id}')">
+Xóa
+</button>
+</td>
+</tr>
+`;
 
     });
 
+}
+window.deleteCompound = async function(id){
+
+    if(!confirm("Xóa HCHC này?"))
+        return;
+
+    await deleteDoc(
+        doc(db,"compounds",id)
+    );
+
+    loadCompounds();
+    loadCompoundTable();
 }
 async function loadReagents(){
 
@@ -311,6 +371,33 @@ async function loadReagents(){
     });
 
 }
+async function loadReactionTypes(){
+
+    const select =
+    document.getElementById("reactionName");
+
+    select.innerHTML = "";
+
+    const snapshot =
+    await getDocs(
+        collection(db,"reactionTypes")
+    );
+
+    snapshot.forEach(docSnap=>{
+
+        const option =
+        document.createElement("option");
+
+        option.value =
+        docSnap.data().name;
+
+        option.textContent =
+        docSnap.data().name;
+
+        select.appendChild(option);
+
+    });
+}
 async function loadReagentTable(){
 
     const snapshot =
@@ -328,13 +415,71 @@ async function loadReagentTable(){
     snapshot.forEach(docSnap=>{
 
         list.innerHTML += `
-        <tr>
-        <td>${docSnap.data().name}</td>
-        </tr>
-        `;
+<tr>
+<td>${docSnap.data().name}</td>
+
+<td>
+<button onclick="deleteReagent('${docSnap.id}')">
+Xóa
+</button>
+</td>
+</tr>
+`;
 
     });
 
+}
+async function loadReactionTypeTable(){
+
+    const snapshot =
+    await getDocs(
+        collection(db,"reactionTypes")
+    );
+
+    const list =
+    document.getElementById("reactionTypeList");
+
+    list.innerHTML = "";
+
+    snapshot.forEach(docSnap=>{
+
+        list.innerHTML += `
+        <tr>
+        <td>${docSnap.data().name}</td>
+
+        <td>
+        <button onclick="deleteReactionType('${docSnap.id}')">
+        Xóa
+        </button>
+        </td>
+
+        </tr>
+        `;
+    });
+}
+window.deleteReagent = async function(id){
+
+    if(!confirm("Xóa thuốc thử này?"))
+        return;
+
+    await deleteDoc(
+        doc(db,"reagents",id)
+    );
+
+    loadReagents();
+    loadReagentTable();
+}
+window.deleteReactionType =
+async function(id){
+
+    if(!confirm("Xóa tên phản ứng này?"))
+        return;
+
+    await deleteDoc(
+        doc(db,"reactionTypes",id)
+    );
+
+    loadReactionTypeTable();
 }
 let editingId = null;
 window.addReaction = async function(){
@@ -533,9 +678,11 @@ loadData();
 }
 loadCompounds();
 loadReagents();
+loadReactionTypes();
 
 loadCompoundTable();
 loadReagentTable();
+loadReactionTypeTable();
 
 loadData();
 </script>
