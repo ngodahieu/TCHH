@@ -285,7 +285,10 @@ function renderTable(data){
 <td>${item.compound}</td>
 <td class="${isNoReaction ? "no":"ok"}">${item.phenomenon}</td>
 <td>${item.condition || ""}</td>
-<td>${item.reactionName || ""}</td>
+<td>
+${item.reactionName || ""}
+${item.reactionName2 ? "<br><small>(" + item.reactionName2 + ")</small>" : ""}
+</td>
 `;
 
         tableBody.appendChild(row);
