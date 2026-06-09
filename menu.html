@@ -302,23 +302,11 @@ if(searchInput){
 }
 loadReagents();
 document.getElementById("reagent").addEventListener("change", (e) => {
-
     selectedReagent = e.target.value;
-
-    // reset phản ứng
-    selectedCondition = "";
-    document.getElementById("conditionSelect").value = "";
-
     loadFirestoreData();
 });
 document.getElementById("conditionSelect").addEventListener("change", (e) => {
-
     selectedCondition = e.target.value;
-
-    // reset thuốc thử
-    selectedReagent = "";
-    document.getElementById("reagent").value = "";
-
     loadFirestoreData();
 });
 loadReactionNames();
