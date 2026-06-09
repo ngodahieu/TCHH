@@ -188,10 +188,6 @@ function loadFirestoreData() {
         constraints.push(where("reagent", "==", selectedReagent));
     }
 
-    if (selectedCondition) {
-        constraints.push(where("condition","==", selectedCondition));
-    }
-
     const finalQuery =
         constraints.length ? query(q, ...constraints) : q;
 
@@ -203,8 +199,22 @@ function loadFirestoreData() {
             allData.push(doc.data());
         });
 
-        renderTable(allData);
+        applyFilter(); // 👈 lọc JS
     });
+}
+function applyFilter() {
+
+    let data = allData;
+
+    if (selectedCondition) {
+        data = data.filter(item =>
+            (item.condition || "")
+            .toLowerCase()
+            .includes(selectedCondition.toLowerCase())
+        );
+    }
+
+    renderTable(data);
 }
 async function loadReagents(){
 
@@ -307,7 +317,7 @@ document.getElementById("reagent").addEventListener("change", (e) => {
 });
 document.getElementById("conditionSelect").addEventListener("change", (e) => {
     selectedCondition = e.target.value;
-    loadFirestoreData();
+    applyFilter();
 });
 loadReactionNames();
 </script>
