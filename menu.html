@@ -111,6 +111,9 @@ BẢNG TỔNG HỢP PHẢN ỨNG NHẬN BIẾT HỮU CƠ
 </h1>
 
 <div class="control">
+<select id="compoundSelect">
+    <option value="">-- Tất cả HCHC --</option>
+</select>
 <select id="reagent">
     <option value="">-- Tất cả thuốc thử --</option>
 </select>
@@ -175,6 +178,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+let selectedCompound = "";
 let selectedReagent = "";
 let selectedReaction = "";
 let allData = [];
@@ -209,27 +213,36 @@ function applyFilter() {
 
     let data = allData;
 
-    if (selectedReaction) {
+    if(selectedCompound){
 
-    data = data.filter(item => {
-
-        const name1 =
-        (item.reactionName || "").toLowerCase();
-
-        const name2 =
-        (item.reactionName2 || "").toLowerCase();
-
-        const selected =
-        selectedReaction.toLowerCase();
-
-        return (
-            name1.includes(selected) ||
-            name2.includes(selected)
+        data = data.filter(item =>
+            (item.compound || "")
+            .toLowerCase()
+            .includes(selectedCompound.toLowerCase())
         );
 
-    });
+    }
 
-}
+    if(selectedReaction){
+
+        data = data.filter(item => {
+
+            const name1 =
+            (item.reactionName || "")
+            .toLowerCase();
+
+            const name2 =
+            (item.reactionName2 || "")
+            .toLowerCase();
+
+            return (
+                name1.includes(selectedReaction.toLowerCase()) ||
+                name2.includes(selectedReaction.toLowerCase())
+            );
+
+        });
+
+    }
 
     renderTable(data);
 }
@@ -260,6 +273,35 @@ async function loadReagents(){
     });
 
     loadFirestoreData();
+}
+async function loadCompounds(){
+
+    const select =
+    document.getElementById("compoundSelect");
+
+    select.innerHTML =
+    `<option value="">-- Tất cả HCHC --</option>`;
+
+    const snapshot =
+    await getDocs(
+        collection(db,"compounds")
+    );
+
+    snapshot.forEach(docSnap=>{
+
+        const option =
+        document.createElement("option");
+
+        option.value =
+        docSnap.data().name;
+
+        option.textContent =
+        docSnap.data().name;
+
+        select.appendChild(option);
+
+    });
+
 }
 async function loadReactionNames(){
 
@@ -351,6 +393,13 @@ if(searchInput){
     });
 }
 loadReagents();
+document.getElementById("compoundSelect").addEventListener("change", (e) => {
+
+    selectedCompound = e.target.value;
+
+    applyFilter();
+
+});
 document.getElementById("reagent").addEventListener("change", (e) => {
     selectedReagent = e.target.value;
     loadFirestoreData();
@@ -360,6 +409,7 @@ document.getElementById("reactionSelect").addEventListener("change", (e) => {
     applyFilter();
 });
 loadReactionNames();
+loadCompounds();
 </script>
 </body>
 </html>
